@@ -1,0 +1,576 @@
+[
+  {
+    "Action": {
+      "Operation": "FILL_WITH_CUSTOM",
+      "Parameters": {
+        "columnDataType": "string",
+        "sourceColumn": "review_text",
+        "value": "Unknown"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_CUSTOM",
+      "Parameters": {
+        "columnDataType": "string",
+        "sourceColumn": "rt_norm",
+        "value": "Unknown"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_CUSTOM",
+      "Parameters": {
+        "columnDataType": "string",
+        "sourceColumn": "title",
+        "value": "Unknown"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_CUSTOM",
+      "Parameters": {
+        "columnDataType": "string",
+        "sourceColumn": "author_names",
+        "value": "Unknown"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_MEDIAN",
+      "Parameters": {
+        "sourceColumn": "n_votes"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_MEDIAN",
+      "Parameters": {
+        "sourceColumn": "average_rating"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_MEDIAN",
+      "Parameters": {
+        "sourceColumn": "ratings_count"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_MEDIAN",
+      "Parameters": {
+        "sourceColumn": "publication_year"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_MEDIAN",
+      "Parameters": {
+        "sourceColumn": "rating"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "FILL_WITH_MEDIAN",
+      "Parameters": {
+        "sourceColumn": "review_char_count"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_PATTERN",
+      "Parameters": {
+        "pattern": "\\s+",
+        "sourceColumn": "rt_norm",
+        "value": " "
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_COMBINED",
+      "Parameters": {
+        "collapseConsecutiveWhitespace": "false",
+        "removeAllPunctuation": "false",
+        "removeAllQuotes": "false",
+        "removeAllWhitespace": "false",
+        "removeCustomCharacters": "false",
+        "removeCustomValue": "false",
+        "removeLeadingAndTrailingPunctuation": "false",
+        "removeLeadingAndTrailingQuotes": "false",
+        "removeLeadingAndTrailingWhitespace": "true",
+        "removeLetters": "false",
+        "removeNumbers": "false",
+        "removeSpecialCharacters": "false",
+        "sourceColumn": "rt_norm"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "LEN",
+      "Parameters": {
+        "endPosition": "NaN",
+        "functionStepType": "LEN",
+        "ignoreCase": "false",
+        "sourceColumn": "rt_norm",
+        "startPosition": "NaN",
+        "targetColumn": "len_with_spaces"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DUPLICATE",
+      "Parameters": {
+        "sourceColumn": "rt_norm",
+        "targetColumn": "rt_no_spaces"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_COMBINED",
+      "Parameters": {
+        "collapseConsecutiveWhitespace": "false",
+        "removeAllPunctuation": "false",
+        "removeAllQuotes": "false",
+        "removeAllWhitespace": "false",
+        "removeCustomCharacters": "false",
+        "removeCustomValue": "false",
+        "removeLeadingAndTrailingPunctuation": "false",
+        "removeLeadingAndTrailingQuotes": "false",
+        "removeLeadingAndTrailingWhitespace": "false",
+        "removeLetters": "false",
+        "removeNumbers": "false",
+        "removeSpecialCharacters": "true",
+        "sourceColumn": "rt_no_spaces"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_COMBINED",
+      "Parameters": {
+        "collapseConsecutiveWhitespace": "false",
+        "removeAllPunctuation": "false",
+        "removeAllQuotes": "false",
+        "removeAllWhitespace": "true",
+        "removeCustomCharacters": "false",
+        "removeCustomValue": "false",
+        "removeLeadingAndTrailingPunctuation": "false",
+        "removeLeadingAndTrailingQuotes": "false",
+        "removeLeadingAndTrailingWhitespace": "false",
+        "removeLetters": "false",
+        "removeNumbers": "false",
+        "removeSpecialCharacters": "false",
+        "sourceColumn": "rt_no_spaces"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "LEN",
+      "Parameters": {
+        "endPosition": "NaN",
+        "functionStepType": "LEN",
+        "ignoreCase": "false",
+        "sourceColumn": "rt_no_spaces",
+        "startPosition": "NaN",
+        "targetColumn": "len_no_spaces"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "SUBTRACT",
+      "Parameters": {
+        "functionStepType": "SUBTRACT",
+        "sourceColumn1": "len_with_spaces",
+        "sourceColumn2": "len_no_spaces",
+        "targetColumn": " space_count"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "ADD",
+      "Parameters": {
+        "functionStepType": "ADD",
+        "sourceColumn1": " space_count",
+        "targetColumn": "review_length_raw",
+        "value2": "1"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_VALUES",
+      "Parameters": {
+        "sourceColumn": "review_char_count"
+      }
+    },
+    "ConditionExpressions": [
+      {
+        "Condition": "LESS_THAN",
+        "Value": "10",
+        "TargetColumn": "review_char_count"
+      }
+    ]
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"rt_no_spaces\"]"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"len_no_spaces\"]"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"len_with_spaces\"]"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\" space_count\"]"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE_DUPLICATE_ROWS",
+      "Parameters": {
+        "duplicateRowsCount": "0"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_DUPLICATES",
+      "Parameters": {
+        "sourceColumn": "review_id"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_DUPLICATES",
+      "Parameters": {
+        "sourceColumn": "review_text"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "LOWER_CASE",
+      "Parameters": {
+        "sourceColumn": "review_text"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_PATTERN",
+      "Parameters": {
+        "pattern": "http\\S+",
+        "sourceColumn": "review_text",
+        "value": " "
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_PATTERN",
+      "Parameters": {
+        "pattern": "[^a-zA-Z0-9\\s]",
+        "sourceColumn": "review_text",
+        "value": " "
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_COMBINED",
+      "Parameters": {
+        "collapseConsecutiveWhitespace": "false",
+        "removeAllPunctuation": "false",
+        "removeAllQuotes": "false",
+        "removeAllWhitespace": "false",
+        "removeCustomCharacters": "false",
+        "removeCustomValue": "false",
+        "removeLeadingAndTrailingPunctuation": "false",
+        "removeLeadingAndTrailingQuotes": "false",
+        "removeLeadingAndTrailingWhitespace": "true",
+        "removeLetters": "false",
+        "removeNumbers": "false",
+        "removeSpecialCharacters": "false",
+        "sourceColumn": "review_text"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "EXTRACT_PATTERN",
+      "Parameters": {
+        "pattern": "(\\d{4})$",
+        "sourceColumn": "date_added",
+        "targetColumn": "review_year"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "EXTRACT_PATTERN",
+      "Parameters": {
+        "pattern": "\\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\\b",
+        "sourceColumn": "date_added",
+        "targetColumn": "review_month"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "EXTRACT_PATTERN",
+      "Parameters": {
+        "pattern": "\\b\\d{1,2}\\b",
+        "sourceColumn": "date_added",
+        "targetColumn": "review_day"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "MONTH",
+      "Parameters": {
+        "functionStepType": "MONTH",
+        "sourceColumn": "review_month",
+        "targetColumn": "review_month_num",
+        "units": "month"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"review_month_num\"]"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Jan",
+        "sourceColumn": "review_month",
+        "value": "1"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Feb",
+        "sourceColumn": "review_month",
+        "value": "2"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Mar",
+        "sourceColumn": "review_month",
+        "value": "3"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Apr",
+        "sourceColumn": "review_month",
+        "value": "4"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "May",
+        "sourceColumn": "review_month",
+        "value": "5"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Jun",
+        "sourceColumn": "review_month",
+        "value": "6"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Jul",
+        "sourceColumn": "review_month",
+        "value": "7"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Aug",
+        "sourceColumn": "review_month",
+        "value": "8"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Sep",
+        "sourceColumn": "review_month",
+        "value": "9"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Oct",
+        "sourceColumn": "review_month",
+        "value": "10"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Nov",
+        "sourceColumn": "review_month",
+        "value": "11"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REPLACE_TEXT",
+      "Parameters": {
+        "pattern": "Dec",
+        "sourceColumn": "review_month",
+        "value": "12"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "MERGE",
+      "Parameters": {
+        "delimiter": "-",
+        "sourceColumns": "[\"review_day\",\"review_month\",\"review_year\"]",
+        "targetColumn": "date_iso"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "YEAR",
+      "Parameters": {
+        "functionStepType": "YEAR",
+        "sourceColumn": "date_iso",
+        "targetColumn": "date_year",
+        "units": "year"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"date_year\"]"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "EXTRACT_PATTERN",
+      "Parameters": {
+        "pattern": "(\\d{4})",
+        "sourceColumn": "date_iso",
+        "targetColumn": "date_year"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "CHANGE_DATA_TYPE",
+      "Parameters": {
+        "columnDataType": "integer",
+        "sourceColumn": "date_year"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "REMOVE_VALUES",
+      "Parameters": {
+        "sourceColumn": "date_year"
+      }
+    },
+    "ConditionExpressions": [
+      {
+        "Condition": "LESS_THAN",
+        "Value": "2014",
+        "TargetColumn": "date_year"
+      }
+    ]
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"date_year\"]"
+      }
+    }
+  }
+]
