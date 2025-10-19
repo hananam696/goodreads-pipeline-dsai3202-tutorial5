@@ -1,0 +1,121 @@
+[
+  {
+    "Action": {
+      "Operation": "NUMBER_FORMAT",
+      "Parameters": {
+        "decimalPlaces": "2",
+        "numericDecimalSeparator": ".",
+        "numericFormatType": "DECIMAL_PRECISION",
+        "sourceColumn": "average_rating"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "NUMBER_FORMAT",
+      "Parameters": {
+        "decimalPlaces": "2",
+        "numericDecimalSeparator": ".",
+        "numericFormatType": "DECIMAL_PRECISION",
+        "sourceColumn": "rating"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "SUBTRACT",
+      "Parameters": {
+        "functionStepType": "SUBTRACT",
+        "sourceColumn1": "rating",
+        "sourceColumn2": "average_rating",
+        "targetColumn": "rating_subtract"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "ABSOLUTE",
+      "Parameters": {
+        "functionStepType": "ABSOLUTE",
+        "sourceColumn": "rating_subtract",
+        "targetColumn": "rating_deviation"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"rating_subtract\"]"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "GROUP_BY",
+      "Parameters": {
+        "groupByAggFunctionOptions": "[{\"sourceColumnName\":\"rating\",\"targetColumnName\":\"user_avg_rating\",\"targetColumnDataType\":\"decimal\",\"functionName\":\"MEAN\"}]",
+        "sourceColumns": "[\"user_id\"]",
+        "useNewDataFrame": "false"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "GROUP_BY",
+      "Parameters": {
+        "groupByAggFunctionOptions": "[{\"sourceColumnName\":\"rating\",\"targetColumnName\":\"user_rating_std\",\"targetColumnDataType\":\"decimal\",\"functionName\":\"STANDARD_DEVIATION\"}]",
+        "sourceColumns": "[\"user_id\"]",
+        "useNewDataFrame": "false"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "GROUP_BY",
+      "Parameters": {
+        "groupByAggFunctionOptions": "[{\"sourceColumnName\":\"review_id\",\"targetColumnName\":\"user_total_reviews\",\"targetColumnDataType\":\"string\",\"functionName\":\"COUNT\"}]",
+        "sourceColumns": "[\"user_id\"]",
+        "useNewDataFrame": "false"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "CHANGE_DATA_TYPE",
+      "Parameters": {
+        "columnDataType": "integer",
+        "sourceColumn": "ratings_count"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "ADD",
+      "Parameters": {
+        "functionStepType": "ADD",
+        "sourceColumn1": "ratings_count",
+        "targetColumn": "ratings_count_ADD",
+        "value2": "1"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "LN",
+      "Parameters": {
+        "functionStepType": "LN",
+        "sourceColumn": "ratings_count_ADD",
+        "targetColumn": "ratings_count_log"
+      }
+    }
+  },
+  {
+    "Action": {
+      "Operation": "DELETE",
+      "Parameters": {
+        "sourceColumns": "[\"ratings_count_ADD\"]"
+      }
+    }
+  }
+]
