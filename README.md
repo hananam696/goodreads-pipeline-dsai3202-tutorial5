@@ -24,3 +24,16 @@ Option 2 (Final Approach):
 - Filtered the dataset to keep only reviews from 2014 onwards.
 
 *Result*: The dataset is now filtered to include only relevant reviews from 2014 and beyond.
+
+# Homework 3
+### – Feature Engineering (User-Level Metrics)
+
+This part focuses on creating new features through AWS DataBrew. Two new features, namely user_avg_rating, which gives the mean of the rating column, and rating_deviation, which calculates how much each individual rating differs from the user’s average rating, were created using the Group By function in AWS. Furthermore, three more aggregated columns were created:
+
+user_rating_std: It calculates the standard deviation of ratings per user to understand how consistent or varied each user’s ratings are.
+
+user_total_reviews: It counts the total number of reviews made by each user.
+
+ratings_count_log: It represents book popularity and was created by first adding one to the ratings count and then applying the natural logarithm (LN) function to this added column.
+
+Result: At the end of this process, the dataset contained five engineered features: rating_deviation, user_avg_rating, user_rating_std, user_total_reviews, and ratings_count_log.
