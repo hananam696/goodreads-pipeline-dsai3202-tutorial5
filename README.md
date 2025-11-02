@@ -45,3 +45,6 @@ In this stage, I ran the full feature extraction job in Amazon SageMaker to gene
 
 ### - Final Features Selection:
 I decided to keep all the newly engineered text features along with the key identifiers — book_id, user_id, and review_id. These features capture the important linguistic, structural, and behavioral aspects of the reviews. I removed 'review_text','review_length_raw' and then disabled zero-shot classification and DistilBERT embedding features to reduce computational cost and make the processing job faster, since these two steps require more memory and GPU resources. (The code for this is given in under the folder documented code)
+
+
+### Figures and explanation given in tutorial 5.ipynb under notebooks folder
