@@ -44,7 +44,13 @@ Result: At the end of this process, the dataset contained five engineered featur
 In this stage, I ran the full feature extraction job in Amazon SageMaker to generate advanced features from the Goodreads dataset. First, I performed a trial run on about 2000 rows to ensure the script worked correctly, and it successfully produced an output file in S3. Then, I tested on 500 rows to confirm that all functions were running properly. After that, I executed the full dataset by disabling two heavy functions (zero-shot classification and DistilBERT embeddings) to reduce cost and processing time due to limited credits, and it successfully completed with the remaining features. Finally, I attempted to run the full dataset again with all functions enabled using six ml.m5.xlarge instances and 120 GB of storage, but after running for more than 10 hours, the credits were exceeded before the job could finish.
 
 ### - Final Features Selection:
-I decided to keep all the newly engineered text features along with the key identifiers — book_id, user_id, and review_id. These features capture the important linguistic, structural, and behavioral aspects of the reviews. I removed 'review_text','review_length_raw' and then disabled zero-shot classification and DistilBERT embedding features to reduce computational cost and make the processing job faster, since these two steps require more memory and GPU resources. (The code for this is given in under the folder documented code)
+Features to keep/add:
+We will keep all original identifiers, review, and book metadata (user_id, book_id, review_id, rating, rt_norm, review_char_count, date_added, n_votes, title, average_rating, ratings_count, publication_year, author_names) and add engineered features (rating_deviation, user_avg_rating, user_rating_std, user_total_reviews, ratings_count_log).
+
+Features to remove:
+Removed review_text and review_length_raw, which are important raw features, because their information is captured by the engineered features (eg., sentiment scores, readability, lexical diversity, and other text-based metrics). Additionally, zero-shot labels and DistilBERT embeddings were disabled to reduce computational cost and simplify the dataset."
+
+The updated code reflecting these changes is available in the SageMaker code folder named goodreads_text_features56 (1).py, and screenshots of this job can be found in the SageMaker jobs folder.
 
 -----------------------------------------------------------------------------------------------------------------------------------
 # Notes
